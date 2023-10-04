@@ -11,34 +11,39 @@ from models import db, Hero, Power, HeroPower
 app = Flask(
     __name__,
     static_url_path='',
-    static_folder='../client/build',
+    static_folder = '../client/build',
     template_folder='../client/build'
 )
+# app = Flask(__name__, static_url_path='/client/build')
 
-app = Flask(__name__)
+# app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
 
-@app.errorhandler(404)
-def not_found(e):
-    return render_template("index.html")
+# @app.errorhandler(404)
+# def not_found(e):
+#     return render_template("index.html")
 api = Api(app)
 
-
-class Home(Resource):
-    def get(self):
-        resp_dict = {
-            "Home": "Home to Marvel heroes"
-        }
-        resp = make_response(
-            jsonify(resp_dict),
-            200,
-        )
-        return resp
-api.add_resource(Home, '/')
+@app.route('/')
+@app.route('/<int:id>')
+def home(id=0):
+    return render_template("index.html")
+# class Home(Resource):
+#     def get(self):
+#         render_template("index.html")
+        # resp_dict = {
+        #     "Home": "Home to Marvel heroes"
+        # }
+        # resp = make_response(
+        #     jsonify(resp_dict),
+        #     200,
+        # )
+        # return resp
+# api.add_resource(Home, '/')
 
 class HeroNames(Resource):
     def get(self):
